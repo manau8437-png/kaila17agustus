@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Cinta di Hari Kemerdekaan ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe0e0, #ffffff, #ffd6d6);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 3s forwards 0.5s;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            color: #b30000;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .letter-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(179, 0, 0, 0.25);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 20px;
+            box-shadow: inset 0 0 15px rgba(255, 77, 77, 0.4);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .letter {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #333;
+            position: relative;
+            z-index: 2;
+            min-height: 200px;
+            white-space: pre-line;
+        }
+
+        .surprise-button-container {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .surprise-button {
+            background: linear-gradient(45deg, #b30000, #ff4d4d, #d4af37, #ff4d4d);
+            background-size: 300% 300%;
+            animation: gradientButton 5s ease infinite;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(179, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .surprise-button::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 55px;
+            background: linear-gradient(45deg, #ffcccc, #b30000, #d4af37, #ffcccc);
+            background-size: 300% 300%;
+            animation: gradientButton 5s ease infinite;
+            z-index: -1;
+            opacity: 0.6;
+            filter: blur(8px);
+        }
+
+        .surprise-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(179, 0, 0, 0.7);
+        }
+
+        .surprise-button:active { transform: translateY(1px); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+            text-align: center;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal-header { margin-bottom: 20px; color: #b30000; }
+        .modal-body { margin-bottom: 30px; }
+
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 24px;
+            color: #b30000;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .playlist {
+            background: rgba(255, 240, 240, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 225, 225, 0.9);
+            transform: translateX(5px);
+        }
+
+        .playlist-item.playing {
+            background: rgba(255, 200, 200, 0.95);
+            box-shadow: 0 0 0 2px #b30000 inset;
+        }
+
+        .playlist-item.playing .playlist-item-play {
+            color: #d4af37;
+        }
+
+        .playlist-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #b30000, #d4af37);
+            font-size: 1.2rem;
+        }
+
+        .playlist-item-info { flex-grow: 1; text-align: left; }
+        .playlist-item-title { font-weight: bold; color: #b30000; }
+        .playlist-item-artist { font-size: 0.9rem; color: #888; }
+        .playlist-item-play {
+            background: none;
+            border: none;
+            color: #b30000;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #b30000;
+            color: #b30000;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover { background: #b30000; color: white; }
+
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+            z-index: 1;
+            animation-name: float;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        .floating-element.mini-flag {
+            width: 28px;
+            height: 18px;
+            background: linear-gradient(to bottom, #b30000 50%, #ffffff 50%);
+            border-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .flag-icon {
+            display: inline-block;
+            width: 1.15em;
+            height: 0.77em;
+            background: linear-gradient(to bottom, #b30000 50%, #ffffff 50%);
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            vertical-align: middle;
+            position: relative;
+            top: -0.08em;
+            margin: 0 0.05em;
+        }
+
+        .global-music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            padding: 10px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(179, 0, 0, 0.3);
+            z-index: 1000;
+            max-width: calc(100vw - 24px);
+        }
+
+        .gmp-btn {
+            background: linear-gradient(45deg, #b30000, #ff4d4d);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(179, 0, 0, 0.4);
+        }
+
+        .gmp-btn:hover { transform: scale(1.1); }
+
+        .gmp-vol-wrap { display: flex; align-items: center; gap: 6px; }
+        .gmp-vol-icon { color: #b30000; font-size: 1rem; flex-shrink: 0; }
+        #gmp-volume { width: 90px; accent-color: #b30000; cursor: pointer; }
+
+        @media (max-width: 480px) {
+            .global-music-player {
+                top: 12px;
+                right: 12px;
+                padding: 8px 10px;
+                gap: 6px;
+                border-radius: 40px;
+            }
+            .gmp-btn { width: 32px; height: 32px; min-width: 32px; font-size: 0.85rem; }
+            #gmp-volume { width: 55px; }
+            .gmp-vol-icon { display: none; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes gradientBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes gradientButton { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes float { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-20px) rotate(5deg); } }
+
+        .cursor-effect {
+            position: absolute;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 100, 100, 0.7);
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.9rem; }
+            .container { padding: 15px; }
+            .letter-container { padding: 20px; }
+            .letter { font-size: 1rem; }
+            .surprise-button { font-size: 1.2rem; padding: 12px 30px; }
+            .floating-element { max-width: 40px; max-height: 40px; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Untuk Kaila Sayangku <span class="flag-icon" title="Bendera Indonesia"></span>❤️</h1>
+        </header>
+
+        <div class="letter-container">
+            <div class="letter" id="typed-text"></div>
+        </div>
+
+        <div class="surprise-button-container">
+            <button class="surprise-button" id="surprise-button">
+                Klik untuk Kejutan! 🎁
+            </button>
+        </div>
+
+        <div class="navigation">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i> Kembali ke Kue Kemerdekaan
+            </a>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">×</button>
+            <div class="modal-header">
+                <h2>😽 Lagu Favorit Haiman 😽</h2>
+            </div>
+            <div class="modal-body">
+                <div class="playlist">
+                    <h3 style="margin-bottom: 15px; color: #b30000;">Lagu-Lagu yang Mengingatkanku Padamu 💕</h3>
+                    <div class="playlist-item" data-src="lagu1.mp3">
+                        <div class="playlist-item-icon">🎵</div>
+                        <div class="playlist-item-info">
+                            <div class="playlist-item-title">Kenangan Terindah Kita</div>
+                            <div class="playlist-item-artist">Lagu Favorit Kita Berdua</div>
+                        </div>
+                        <button class="playlist-item-play"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="playlist-item" data-src="lagu2.mp3">
+                        <div class="playlist-item-icon">🎶</div>
+                        <div class="playlist-item-info">
+                            <div class="playlist-item-title">Malam Itu, di Bawah Bintang</div>
+                            <div class="playlist-item-artist">Kisah Petualangan Kita</div>
+                        </div>
+                        <button class="playlist-item-play"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="playlist-item" data-src="lagu3.mp3">
+                        <div class="playlist-item-icon"><span class="flag-icon" style="width:1.4em;height:0.95em;" title="Bendera Indonesia"></span></div>
+                        <div class="playlist-item-info">
+                            <div class="playlist-item-title">Merdeka Bersamamu</div>
+                            <div class="playlist-item-artist">Haiman & Kaila</div>
+                        </div>
+                        <button class="playlist-item-play"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="playlist-item" data-src="lagu4.mp3">
+                        <div class="playlist-item-icon">💖</div>
+                        <div class="playlist-item-info">
+                            <div class="playlist-item-title">Selalu Ada Untukmu</div>
+                            <div class="playlist-item-artist">Janji Haiman</div>
+                        </div>
+                        <button class="playlist-item-play"><i class="fas fa-play"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="global-music-player" id="global-music-player">
+        <button class="gmp-btn" id="gmp-play-pause" aria-label="Putar atau Jeda Musik"><i class="fas fa-play"></i></button>
+        <button class="gmp-btn" id="gmp-stop" aria-label="Berhentikan Musik"><i class="fas fa-stop"></i></button>
+        <div class="gmp-vol-wrap">
+            <i class="fas fa-volume-up gmp-vol-icon"></i>
+            <input type="range" id="gmp-volume" min="0" max="1" step="0.05" value="0.5" aria-label="Volume">
+        </div>
+    </div>
+
+    <audio id="click-sound" preload="auto">
+        <source src="klik.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="background-music" loop>
+        <source src="musik.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="playlist-player"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelector('.container').style.opacity = 1;
+            }, 500);
+
+            const letterContent = "Kaila sayangku,\n\nDi tengah semaraknya Merah Putih berkibar hari ini, aku, Haiman, ingin berhenti sejenak untuk bilang betapa bersyukurnya aku punya kamu di hidupku. Sama seperti para pahlawan yang berjuang demi kemerdekaan bangsa ini, aku juga akan terus berjuang untuk menjaga dan mencintaimu, hari demi hari.\n\nDari obrolan panjang tengah malam sampai petualangan dadakan kita, kamu selalu berhasil bikin hariku jadi lebih cerah. Kamu adalah rumah, sekaligus kejutan yang selalu kutunggu.\n\nDi Hari Kemerdekaan ini, aku merasa paling merdeka justru saat bersamamu — bebas jadi diriku sendiri, bebas jatuh cinta lagi dan lagi padamu.\n\nSelamat Hari Kemerdekaan, sayangku. Semoga cinta kita seabadi semangat 17 Agustus.\n\nDengan segenap cinta,\nHaiman Fadila";
+
+            new Typed('#typed-text', {
+                strings: [letterContent],
+                typeSpeed: 25,
+                showCursor: true,
+                cursorChar: '|',
+                onComplete: function() {
+                    setTimeout(() => {
+                        document.querySelector('.surprise-button').classList.add('animate__animated', 'animate__pulse', 'animate__infinite');
+                    }, 1000);
+                }
+            });
+
+            const floatingElements = [
+                { type: 'heart', color: '#b30000', size: '20px' },
+                { type: 'heart', color: '#ff6666', size: '30px' },
+                { type: 'flag', size: '25px' },
+                { type: 'flag', size: '18px' },
+                { emoji: '🎆', size: '28px' },
+                { emoji: '✨', size: '22px' },
+                { emoji: '✨', size: '18px' },
+                { type: 'heart', color: '#b30000', size: '24px' },
+                { type: 'flag', size: '20px' },
+                { emoji: '🎆', size: '24px' }
+            ];
+
+            floatingElements.forEach((element, index) => {
+                createFloatingElement(element, index);
+            });
+
+            document.addEventListener('mousemove', createCursorEffect);
+
+            const surpriseButton = document.getElementById('surprise-button');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalClose = document.getElementById('modal-close');
+            const clickSound = document.getElementById('click-sound');
+
+            surpriseButton.addEventListener('click', function() {
+                clickSound.play();
+                modalOverlay.classList.add('active');
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#b30000', '#ff4d4d', '#ffffff', '#d4af37']
+                });
+            });
+
+            modalClose.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+            });
+
+            const backgroundMusic = document.getElementById('background-music');
+            const playPauseBtn = document.getElementById('gmp-play-pause');
+            const stopBtn = document.getElementById('gmp-stop');
+            const volumeControl = document.getElementById('gmp-volume');
+            let isMusicPlaying = false;
+
+            backgroundMusic.volume = volumeControl.value;
+
+            function setPlayPauseIcon(playing) {
+                playPauseBtn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+            }
+
+            // Coba autoplay musik latar begitu halaman dibuka
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    backgroundMusic.play()
+                        .then(() => {
+                            isMusicPlaying = true;
+                            setPlayPauseIcon(true);
+                        })
+                        .catch(e => console.log('Autoplay diblokir browser:', e));
+                }, 1000);
+            });
+
+            playPauseBtn.addEventListener('click', function() {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    isMusicPlaying = false;
+                    setPlayPauseIcon(false);
+                } else {
+                    // Kalau ada lagu playlist yang sedang main, hentikan dulu
+                    if (currentPlayingItem) {
+                        playlistPlayer.pause();
+                        resetPlaylistIcon(currentPlayingItem);
+                        currentPlayingItem = null;
+                    }
+                    backgroundMusic.play().catch(e => console.log('Audio play error:', e));
+                    isMusicPlaying = true;
+                    setPlayPauseIcon(true);
+                }
+            });
+
+            stopBtn.addEventListener('click', function() {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                isMusicPlaying = false;
+                setPlayPauseIcon(false);
+            });
+
+            volumeControl.addEventListener('input', function() {
+                backgroundMusic.volume = volumeControl.value;
+                playlistPlayer.volume = volumeControl.value;
+            });
+
+            // === Playlist: bikin tiap tombol play di daftar lagu benar-benar memutar lagunya ===
+            const playlistPlayer = document.getElementById('playlist-player');
+            playlistPlayer.volume = volumeControl.value;
+            const playlistItems = document.querySelectorAll('.playlist-item');
+            let currentPlayingItem = null;
+
+            function resetPlaylistIcon(item) {
+                const icon = item.querySelector('.playlist-item-play i');
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                item.classList.remove('playing');
+            }
+
+            playlistItems.forEach(item => {
+                const playBtn = item.querySelector('.playlist-item-play');
+                const icon = playBtn.querySelector('i');
+                const src = item.getAttribute('data-src');
+
+                playBtn.addEventListener('click', function() {
+                    // Kalau lagu ini yang lagi main, klik lagi = pause
+                    if (currentPlayingItem === item && !playlistPlayer.paused) {
+                        playlistPlayer.pause();
+                        resetPlaylistIcon(item);
+                        currentPlayingItem = null;
+                        return;
+                    }
+
+                    // Matikan musik latar & tombol lagu lain yang sedang main
+                    if (isMusicPlaying) {
+                        backgroundMusic.pause();
+                        isMusicPlaying = false;
+                        setPlayPauseIcon(false);
+                    }
+                    if (currentPlayingItem && currentPlayingItem !== item) {
+                        resetPlaylistIcon(currentPlayingItem);
+                    }
+
+                    // Putar lagu yang diklik
+                    if (playlistPlayer.src !== src) {
+                        playlistPlayer.src = src;
+                    }
+                    playlistPlayer.play().catch(e => console.log('Playlist audio error:', e));
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    item.classList.add('playing');
+                    currentPlayingItem = item;
+                });
+            });
+
+            playlistPlayer.addEventListener('ended', function() {
+                if (currentPlayingItem) {
+                    resetPlaylistIcon(currentPlayingItem);
+                    currentPlayingItem = null;
+                }
+            });
+
+            function createFloatingElement(element, index) {
+                const floatingElement = document.createElement('div');
+                floatingElement.classList.add('floating-element');
+
+                if (element.emoji) {
+                    floatingElement.textContent = element.emoji;
+                    floatingElement.style.fontSize = element.size;
+                } else if (element.type === 'heart') {
+                    floatingElement.innerHTML = '<i class="fas fa-heart"></i>';
+                    floatingElement.style.color = element.color;
+                    floatingElement.style.fontSize = element.size;
+                } else if (element.type === 'flag') {
+                    floatingElement.classList.add('mini-flag');
+                    const sizeNum = parseInt(element.size, 10) || 25;
+                    floatingElement.style.width = sizeNum + 'px';
+                    floatingElement.style.height = Math.round(sizeNum * 0.66) + 'px';
+                }
+
+                const randomX = Math.random() * window.innerWidth;
+                const randomY = Math.random() * window.innerHeight;
+                floatingElement.style.left = `${randomX}px`;
+                floatingElement.style.top = `${randomY}px`;
+
+                const duration = 5 + Math.random() * 10;
+                const delay = Math.random() * 5;
+                floatingElement.style.animationDuration = `${duration}s`;
+                floatingElement.style.animationDelay = `${delay}s`;
+
+                document.body.appendChild(floatingElement);
+            }
+
+            function createCursorEffect(e) {
+                const cursorEffect = document.createElement('div');
+                cursorEffect.classList.add('cursor-effect');
+                cursorEffect.style.left = `${e.pageX}px`;
+                cursorEffect.style.top = `${e.pageY}px`;
+                document.body.appendChild(cursorEffect);
+
+                setTimeout(() => {
+                    cursorEffect.style.opacity = 1;
+                    cursorEffect.style.transform = `translate(-50%, -50%) scale(${Math.random() * 0.5 + 0.5})`;
+                    setTimeout(() => {
+                        cursorEffect.style.opacity = 0;
+                        setTimeout(() => cursorEffect.remove(), 500);
+                    }, 300);
+                }, 10);
+            }
+        });
+    </script>
+</body>
+</html>

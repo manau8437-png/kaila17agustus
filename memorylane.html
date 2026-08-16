@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lorong Kenangan Kita - Merah Putih & Cinta</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ffd6d6 0%, #ffffff 50%, #ffcccc 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .confetti {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #ff4d4d;
+        top: -20px;
+        opacity: 0;
+      }
+
+      .memory-lane-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .header h1 {
+        font-size: 3.2rem;
+        color: #b30000;
+        margin-bottom: 1rem;
+        font-family: "Pacifico", cursive;
+        text-shadow: 3px 3px 0px rgba(255, 200, 200, 0.6);
+        animation: heartbeat 1.5s ease-in-out infinite;
+      }
+
+      .flag-icon {
+        display: inline-block;
+        width: 0.85em;
+        height: 0.57em;
+        background: linear-gradient(to bottom, #b30000 50%, #ffffff 50%);
+        border-radius: 3px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        vertical-align: middle;
+        position: relative;
+        top: -0.08em;
+        margin: 0 0.05em;
+      }
+
+      .header p {
+        font-size: 1.15rem;
+        color: #7a0000;
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 1rem;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(179, 0, 0, 0.2);
+      }
+
+      .gallery-container { position: relative; margin: 2rem 0; }
+
+      .slideshow-controls {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: fadeIn 1s forwards 1s;
+      }
+
+      .btn {
+        padding: 0.8rem 1.5rem;
+        margin: 0 0.5rem;
+        background: linear-gradient(45deg, #b30000, #ff4d4d);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(179, 0, 0, 0.5);
+      }
+
+      .btn:hover {
+        background: linear-gradient(45deg, #ff4d4d, #b30000);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(179, 0, 0, 0.7);
+      }
+
+      .btn i { margin-right: 0.5rem; }
+
+      .gallery {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: #b30000 #ffd6d6;
+      }
+
+      .gallery::-webkit-scrollbar { height: 8px; }
+      .gallery::-webkit-scrollbar-track { background: #ffd6d6; border-radius: 10px; }
+      .gallery::-webkit-scrollbar-thumb { background: #b30000; border-radius: 10px; }
+
+      .memory-card {
+        flex: 0 0 auto;
+        width: 300px;
+        height: 400px;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(179, 0, 0, 0.3);
+        transform: translateY(50px) rotate(var(--rotate, 0deg));
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 8px solid white;
+      }
+
+      .memory-card.visible { transform: translateY(0) rotate(var(--rotate, 0deg)); opacity: 1; }
+
+      .memory-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+      .memory-card:hover .memory-img { transform: scale(1.08); }
+
+      .memory-caption {
+        position: absolute;
+        bottom: -100%;
+        left: 0;
+        width: 100%;
+        background: rgba(179, 0, 0, 0.88);
+        color: white;
+        padding: 1.2rem;
+        transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        font-size: 1.05rem;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+      }
+
+      .memory-card:hover .memory-caption { bottom: 0; }
+
+      .memory-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at center, transparent 50%, rgba(255, 255, 255, 0.2) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+      }
+
+      .memory-card:hover::before { opacity: 1; }
+
+      .card-tape {
+        position: absolute;
+        width: 100px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.85);
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%) rotate(var(--rotate, 2deg));
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(179, 0, 0, 0.2);
+      }
+
+      .card-sticker {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        z-index: 3;
+        bottom: 10px;
+        right: 10px;
+        transform: rotate(15deg);
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+        animation: bounce 2s infinite;
+      }
+
+      .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3rem;
+        padding: 0 1rem;
+      }
+
+      .placeholder-img {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        background: linear-gradient(135deg, #ffb3b3, #ffffff);
+      }
+
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes bounce { 0%, 100% { transform: rotate(15deg) translateY(0); } 50% { transform: rotate(15deg) translateY(-8px); } }
+      @keyframes floatDown {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+        10% { opacity: 1; }
+        100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+      }
+
+      .global-music-player {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(6px);
+        padding: 10px 16px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(179, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: calc(100vw - 24px);
+      }
+
+      .gmp-btn {
+        background: linear-gradient(45deg, #b30000, #ff4d4d);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 50%;
+        font-size: 1.05rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 8px rgba(179, 0, 0, 0.4);
+      }
+
+      .gmp-btn:hover { transform: scale(1.1); }
+
+      .gmp-vol-wrap { display: flex; align-items: center; gap: 6px; }
+      .gmp-vol-icon { color: #b30000; font-size: 1rem; flex-shrink: 0; }
+      #gmp-volume { width: 90px; accent-color: #b30000; cursor: pointer; }
+
+      @media (max-width: 480px) {
+        .global-music-player {
+          top: 12px;
+          right: 12px;
+          padding: 8px 10px;
+          gap: 6px;
+          border-radius: 40px;
+        }
+        .gmp-btn { width: 32px; height: 32px; min-width: 32px; font-size: 0.85rem; }
+        #gmp-volume { width: 55px; }
+        .gmp-vol-icon { display: none; }
+      }
+
+      @media (max-width: 768px) {
+        .header h1 { font-size: 2.3rem; }
+        .header p { font-size: 1rem; }
+        .memory-card { width: 250px; height: 340px; }
+        .navigation-buttons { flex-direction: column; gap: 1rem; align-items: center; }
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  </head>
+  <body>
+    <div class="confetti" id="confetti-container"></div>
+
+    <div class="memory-lane-container">
+      <div class="header">
+        <h1>Lorong Kenangan Kita <span class="flag-icon" title="Bendera Indonesia"></span>❤️</h1>
+        <p>
+          Perjalanan melewati momen-momen terindah yang Haiman & Kaila lalui bersama —
+          seindah semangat Merah Putih. Arahkan kursor ke tiap kartu untuk membaca kenangannya! ✨💖
+        </p>
+      </div>
+
+      <div class="slideshow-controls">
+        <button id="startSlideshow" class="btn" style="display: flex">
+          <span>▶ Mulai Geser Gambar Otomatis</span>
+        </button>
+        <button id="pauseSlideshow" class="btn" style="display: none">
+          <span>⏸ Jeda Geser Gambar</span>
+        </button>
+      </div>
+
+      <div class="gallery-container">
+        <div class="gallery" id="memoryGallery">
+          <!-- Kartu kenangan akan dimuat otomatis lewat JavaScript -->
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <button id="backButton" class="btn">
+          <i class="fas fa-arrow-left"></i> Kembali
+        </button>
+        <button id="nextButton" class="btn">
+          Kejutan Berikutnya <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="global-music-player" id="global-music-player">
+      <button class="gmp-btn" id="gmp-play-pause" aria-label="Putar atau Jeda Musik"><i class="fas fa-play"></i></button>
+      <button class="gmp-btn" id="gmp-stop" aria-label="Berhentikan Musik"><i class="fas fa-stop"></i></button>
+      <div class="gmp-vol-wrap">
+        <i class="fas fa-volume-up gmp-vol-icon"></i>
+        <input type="range" id="gmp-volume" min="0" max="1" step="0.05" value="0.5" aria-label="Volume">
+      </div>
+    </div>
+
+    <audio id="background-music" loop>
+      <source src="musik.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script>
+      const memories = [
+        {
+          image: "1.jpg",
+          caption: "Awal-awal kita pacaran lucu ya 😆",
+          rotationAngle: -2,
+          emoji: "🌊",
+        },
+        {
+          image: "2.jpg",
+          caption: "Ini juga pas awal-awal masih polos bangrt ya",
+          rotationAngle: 3,
+          emoji: "🌅",
+        },
+        {
+          image: "3.jpg",
+          caption: "Ini juga hehehe",
+          rotationAngle: -1,
+          emoji: "🚗",
+        },
+        {
+          image: "4.jpg",
+          caption: "Ini pas kamu wisuda smp",
+          rotationAngle: 2,
+          emoji: "🍕",
+        },
+        {
+          image: "5.jpg",
+          caption: "Ini juga pas kamu wisuda hehe muka aku aib banget",
+          rotationAngle: -3,
+          emoji: "🏕️",
+        },
+        {
+          image: "6.jpg",
+          caption: "Ini pas kita terakhir ketemu sebelum LDR",
+          rotationAngle: 1,
+          emoji: "🎵",
+        },
+        {
+          image: "7.jpg",
+          caption: "Ini juga hehe kangen banget pas kita terakhir ketemu kaya seru banget",
+          rotationAngle: -2,
+          emoji: "🎇",
+        },
+        {
+          image: "6.jpg",
+          caption: "Kamu selalu ada buat aku, susah maupun senang. Terima kasih sudah jadi rumah buatku, Kaila. ❤️",
+          rotationAngle: -1,
+          emoji: "💕",
+        },
+        {
+          image: "8.jpg",
+          caption: "Dirgahayu Indonesia, dan dirgahayu cinta kita! Sampai bertemu petualangan-petualangan berikutnya. — Haiman",
+          rotationAngle: 3,
+          emoji: "🎆",
+        },
+      ];
+
+      function createConfetti() {
+        const confettiContainer = document.getElementById("confetti-container");
+        const colors = ["#b30000", "#ff4d4d", "#ffffff", "#d4af37", "#ff8080"];
+
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti-piece";
+
+          confetti.style.left = Math.random() * 100 + "vw";
+          confetti.style.width = Math.random() * 15 + 5 + "px";
+          confetti.style.height = Math.random() * 15 + 5 + "px";
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+          const duration = Math.random() * 3 + 3;
+          const delay = Math.random() * 5;
+
+          confetti.style.animation = `floatDown ${duration}s ease-in ${delay}s infinite`;
+          confetti.style.opacity = Math.random();
+
+          confettiContainer.appendChild(confetti);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        createConfetti();
+
+        // === Pemutar musik latar (play / stop / volume) ===
+        const backgroundMusic = document.getElementById("background-music");
+        const playPauseBtn = document.getElementById("gmp-play-pause");
+        const stopBtn = document.getElementById("gmp-stop");
+        const volumeControl = document.getElementById("gmp-volume");
+        let isMusicPlaying = false;
+
+        backgroundMusic.volume = volumeControl.value;
+
+        function setPlayPauseIcon(playing) {
+          playPauseBtn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+        }
+
+        window.addEventListener("load", () => {
+          setTimeout(() => {
+            backgroundMusic
+              .play()
+              .then(() => {
+                isMusicPlaying = true;
+                setPlayPauseIcon(true);
+              })
+              .catch((e) => console.log("Autoplay diblokir browser:", e));
+          }, 1000);
+        });
+
+        playPauseBtn.addEventListener("click", function () {
+          if (isMusicPlaying) {
+            backgroundMusic.pause();
+          } else {
+            backgroundMusic.play().catch((e) => console.log("Audio play error:", e));
+          }
+          isMusicPlaying = !isMusicPlaying;
+          setPlayPauseIcon(isMusicPlaying);
+        });
+
+        stopBtn.addEventListener("click", function () {
+          backgroundMusic.pause();
+          backgroundMusic.currentTime = 0;
+          isMusicPlaying = false;
+          setPlayPauseIcon(false);
+        });
+
+        volumeControl.addEventListener("input", function () {
+          backgroundMusic.volume = volumeControl.value;
+        });
+
+        const galleryElement = document.getElementById("memoryGallery");
+        const startSlideshowBtn = document.getElementById("startSlideshow");
+        const pauseSlideshowBtn = document.getElementById("pauseSlideshow");
+        const backButton = document.getElementById("backButton");
+        const nextButton = document.getElementById("nextButton");
+
+        let slideshowInterval;
+        let currentSlide = 0;
+
+        memories.forEach((memory, index) => {
+          const memoryCard = document.createElement("div");
+          memoryCard.className = "memory-card";
+          memoryCard.style.setProperty("--rotate", `${memory.rotationAngle}deg`);
+
+          const tapeElement = document.createElement("div");
+          tapeElement.className = "card-tape";
+          tapeElement.style.setProperty("--rotate", `${memory.rotationAngle * 2}deg`);
+
+          const imgWrap = document.createElement("div");
+          imgWrap.style.width = "100%";
+          imgWrap.style.height = "100%";
+
+          const imgElement = document.createElement("img");
+          imgElement.className = "memory-img";
+          imgElement.src = memory.image;
+          imgElement.alt = `Kenangan ${index + 1}`;
+          imgElement.onerror = function () {
+            imgWrap.innerHTML = `<div class="placeholder-img">${memory.emoji}</div>`;
+          };
+          imgWrap.appendChild(imgElement);
+
+          const captionElement = document.createElement("div");
+          captionElement.className = "memory-caption";
+          captionElement.textContent = memory.caption;
+
+          const stickerElement = document.createElement("div");
+          stickerElement.className = "card-sticker";
+          stickerElement.innerHTML = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50" fill="#b30000" />
+                    <text x="50" y="65" font-family="Arial" font-size="40" text-anchor="middle" fill="white">${memory.emoji}</text>
+                </svg>`;
+
+          memoryCard.appendChild(tapeElement);
+          memoryCard.appendChild(imgWrap);
+          memoryCard.appendChild(captionElement);
+          memoryCard.appendChild(stickerElement);
+          galleryElement.appendChild(memoryCard);
+        });
+
+        document.querySelector(".slideshow-controls").style.opacity = "1";
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+
+        document.querySelectorAll(".memory-card").forEach((card, index) => {
+          observer.observe(card);
+          setTimeout(() => card.classList.add("visible"), 500 + index * 150);
+        });
+
+        function startSlideshow() {
+          startSlideshowBtn.style.display = "none";
+          pauseSlideshowBtn.style.display = "flex";
+
+          if (slideshowInterval) clearInterval(slideshowInterval);
+
+          slideshowInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % memories.length;
+            const cards = galleryElement.querySelectorAll(".memory-card");
+            if (cards && cards.length > 0 && cards[currentSlide]) {
+              const cardRect = cards[currentSlide].getBoundingClientRect();
+              const galleryRect = galleryElement.getBoundingClientRect();
+              galleryElement.scrollTo({
+                left: cards[currentSlide].offsetLeft - galleryRect.width / 2 + cardRect.width / 2,
+                behavior: "smooth",
+              });
+            }
+          }, 2000);
+        }
+
+        function pauseSlideshow() {
+          pauseSlideshowBtn.style.display = "none";
+          startSlideshowBtn.style.display = "flex";
+          if (slideshowInterval) {
+            clearInterval(slideshowInterval);
+            slideshowInterval = null;
+          }
+        }
+
+        startSlideshowBtn.addEventListener("click", startSlideshow);
+        pauseSlideshowBtn.addEventListener("click", pauseSlideshow);
+
+        backButton.addEventListener("click", function () {
+          window.location.href = "index.html";
+        });
+
+        nextButton.addEventListener("click", function () {
+          window.location.href = "cake.html";
+        });
+
+        gsap.from(".header", { duration: 1, y: -50, opacity: 0, ease: "back.out(1.7)" });
+        gsap.from(".navigation-buttons", { duration: 1, y: 50, opacity: 0, delay: 0.5, ease: "power3.out" });
+
+        document.querySelectorAll(".memory-card").forEach((card) => {
+          card.addEventListener("mouseenter", function () {
+            gsap.to(this, { scale: 1.05, boxShadow: "0 15px 35px rgba(179, 0, 0, 0.5)", duration: 0.3 });
+          });
+          card.addEventListener("mouseleave", function () {
+            gsap.to(this, { scale: 1, boxShadow: "0 10px 25px rgba(179, 0, 0, 0.3)", duration: 0.3 });
+          });
+        });
+
+        setTimeout(() => {
+          document.querySelector(".gallery-container").scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
