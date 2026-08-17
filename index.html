@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirgahayu RI & Cinta Kita, Kaila! ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #b30000 0%, #ff4d4d 35%, #ffffff 65%, #ff4d4d 100%);
+            background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 2rem;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .container:hover {
+            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            color: #b30000;
+            text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: bounce-in 1.5s forwards 0.5s;
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            color: #7a0000;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.7);
+            opacity: 0;
+        }
+
+        .next-button {
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #b30000, #ff0000, #d4af37);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fade-in 1s forwards 3s, gradientShift 4s ease infinite;
+        }
+
+        .next-button:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.7);
+        }
+
+        .global-music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            padding: 10px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            max-width: calc(100vw - 24px);
+        }
+
+        .gmp-btn {
+            background: linear-gradient(45deg, #b30000, #ff4d4d);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(179, 0, 0, 0.4);
+        }
+
+        .gmp-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .gmp-vol-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gmp-vol-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        #gmp-volume {
+            width: 90px;
+            accent-color: #b30000;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .global-music-player {
+                top: 12px;
+                right: 12px;
+                padding: 8px 10px;
+                gap: 6px;
+                border-radius: 40px;
+            }
+            .gmp-btn { width: 32px; height: 32px; min-width: 32px; font-size: 0.9rem; }
+            #gmp-volume { width: 55px; }
+            .gmp-vol-icon { display: none; }
+        }
+
+        .confetti, .flag, .heart, .star, .firework {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            z-index: 1;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .flag {
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(to bottom, #b30000 50%, #ffffff 50%);
+            border-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .flag-icon {
+            display: inline-block;
+            width: 1.15em;
+            height: 0.77em;
+            background: linear-gradient(to bottom, #b30000 50%, #ffffff 50%);
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            vertical-align: middle;
+            position: relative;
+            top: -0.08em;
+            margin: 0 0.05em;
+        }
+        .heart { width: 25px; height: 25px; }
+        .star { width: 18px; height: 18px; }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            80% { transform: scale(0.9); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typewriter-container {
+            display: inline-block;
+            margin: 0 auto;
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            height: 2.5rem;
+        }
+
+        .typewriter-text {
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typewriter 3s steps(60) forwards 1.5s;
+        }
+
+        .cursor {
+            position: absolute;
+            right: -5px;
+            width: 3px;
+            height: 100%;
+            background-color: #b30000;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .names-tag {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: #7a0000;
+            opacity: 0;
+            animation: fade-in 1s forwards 3.5s;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.3rem; }
+            .subtitle { font-size: 1.2rem; }
+            .container { width: 90%; padding: 1.5rem; }
+            .next-button { padding: 0.8rem 2rem; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-shadow: rgb(255,255,255) 0px 0px 10px, rgba(255,255,255,0.8) 0px 0px 20px, rgba(255,0,0,0.6) 0px 0px 30px;">
+            Dirgahayu Republik Indonesia! </br>Sayangku Kaila Pendek <span class="flag-icon" title="Bendera Indonesia"></span>❤️ </br>😽
+        </h1>
+        <div class="typewriter-container">
+            <div class="subtitle typewriter-text">
+                Kaila, Haiman punya kejutan spesial buat kamu di hari kemerdekaan ini. Klik untuk lanjut, ya!
+                <span class="cursor"></span>
+            </div>
+        </div>
+        <button class="next-button" onclick="goToNextPage()">Lanjut</button>
+        <div class="names-tag">Haiman Fadila &#10084; Kaila Adila</div>
+    </div>
+
+    <div class="global-music-player" id="global-music-player">
+        <button class="gmp-btn" id="gmp-play-pause" aria-label="Putar atau Jeda Musik">▶️</button>
+        <button class="gmp-btn" id="gmp-stop" aria-label="Berhentikan Musik">⏹️</button>
+        <div class="gmp-vol-wrap">
+            <span class="gmp-vol-icon">🔊</span>
+            <input type="range" id="gmp-volume" min="0" max="1" step="0.05" value="0.5" aria-label="Volume">
+        </div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="musik.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script>
+        const audio = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('gmp-play-pause');
+        const stopBtn = document.getElementById('gmp-stop');
+        const volumeControl = document.getElementById('gmp-volume');
+        let isPlaying = false;
+
+        // ===== Penyimpanan status musik lintas halaman =====
+        const MUSIC_STATE_KEY = 'gmpMusicState';
+
+        function saveMusicState() {
+            try {
+                localStorage.setItem(MUSIC_STATE_KEY, JSON.stringify({
+                    time: audio.currentTime,
+                    playing: isPlaying,
+                    volume: audio.volume
+                }));
+            } catch (e) {}
+        }
+
+        function loadMusicState() {
+            try {
+                const raw = localStorage.getItem(MUSIC_STATE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const savedMusicState = loadMusicState();
+
+        if (savedMusicState && typeof savedMusicState.volume === 'number') {
+            audio.volume = savedMusicState.volume;
+            volumeControl.value = savedMusicState.volume;
+        } else {
+            audio.volume = volumeControl.value;
+        }
+
+        function applySavedTime() {
+            if (savedMusicState && typeof savedMusicState.time === 'number' && isFinite(savedMusicState.time)) {
+                try { audio.currentTime = savedMusicState.time; } catch (e) {}
+            }
+        }
+        if (audio.readyState >= 1) {
+            applySavedTime();
+        } else {
+            audio.addEventListener('loadedmetadata', applySavedTime, { once: true });
+        }
+
+        window.addEventListener('load', () => {
+            const shouldPlay = !savedMusicState || savedMusicState.playing !== false;
+            setTimeout(() => {
+                if (shouldPlay) {
+                    audio.play()
+                        .then(() => {
+                            isPlaying = true;
+                            playPauseBtn.textContent = '⏸️';
+                        })
+                        .catch(error => {
+                            console.log("Audio play failed due to autoplay restrictions:", error);
+                        });
+                }
+            }, 300);
+        });
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playPauseBtn.textContent = '▶️';
+            } else {
+                audio.play();
+                playPauseBtn.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+            saveMusicState();
+        });
+
+        stopBtn.addEventListener('click', () => {
+            audio.pause();
+            audio.currentTime = 0;
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+            saveMusicState();
+        });
+
+        volumeControl.addEventListener('input', () => {
+            audio.volume = volumeControl.value;
+            saveMusicState();
+        });
+
+        audio.addEventListener('timeupdate', saveMusicState);
+        window.addEventListener('beforeunload', saveMusicState);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') saveMusicState();
+        });
+
+        function goToNextPage() {
+            gsap.to('.next-button', {
+                scale: 1.2,
+                yoyo: true,
+                repeat: 1,
+                duration: 0.3,
+                onComplete: () => {
+                    window.location.href = "memorylane.html";
+                }
+            });
+        }
+
+        // Elemen mengambang: bendera, kembang api, hati, bintang
+        function createFloatingElements() {
+            const colors = ['#b30000', '#ff0000', '#d4af37', '#ffffff', '#ff6666'];
+            const elements = ['confetti', 'flag', 'heart', 'star', 'firework'];
+            const confettiShapes = ['▲', '■', '●', '★', '♥', '✦', '✧'];
+
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const element = document.createElement('div');
+                    const elementType = elements[Math.floor(Math.random() * elements.length)];
+                    element.className = elementType;
+
+                    element.style.left = Math.random() * 100 + 'vw';
+                    element.style.top = -30 + 'px';
+
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+
+                    if (elementType === 'confetti') {
+                        const shape = confettiShapes[Math.floor(Math.random() * confettiShapes.length)];
+                        element.innerHTML = shape;
+                        element.style.color = color;
+                        element.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                        element.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    } else if (elementType === 'flag') {
+                        const flagSize = Math.random() * 20 + 26;
+                        element.style.width = flagSize + 'px';
+                        element.style.height = (flagSize * 0.66) + 'px';
+                    } else if (elementType === 'heart') {
+                        element.innerHTML = '❤️';
+                        element.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                    } else if (elementType === 'star') {
+                        element.innerHTML = '✨';
+                        element.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    } else if (elementType === 'firework') {
+                        element.innerHTML = '🎆';
+                        element.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    }
+
+                    document.body.appendChild(element);
+
+                    gsap.to(element, {
+                        y: window.innerHeight + 100,
+                        x: '+=' + (Math.random() * 200 - 100),
+                        rotation: Math.random() * 360,
+                        duration: Math.random() * 10 + 5,
+                        ease: "power1.out",
+                        onComplete: () => {
+                            element.remove();
+                        }
+                    });
+
+                    if (Math.random() > 0.7) {
+                        gsap.to(element, {
+                            opacity: 0.5,
+                            yoyo: true,
+                            repeat: -1,
+                            duration: 0.5,
+                            ease: "sine.inOut"
+                        });
+                    }
+                }, i * 200);
+            }
+        }
+
+        window.addEventListener('load', createFloatingElements);
+        setInterval(createFloatingElements, 5000);
+
+        gsap.to('h1', {
+            textShadow: "0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,0,0,0.6)",
+            repeat: -1,
+            yoyo: true,
+            duration: 2
+        });
+    </script>
+</body>
+</html>

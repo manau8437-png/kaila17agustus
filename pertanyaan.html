@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertanyaan Spesial ✨</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe0e0, #ffffff, #ffd6d6);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .screen {
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ===== PREPARATION SCREEN ===== */
+        .prep-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 0 0 30px rgba(179, 0, 0, 0.2);
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .prep-title {
+            font-size: 2rem;
+            color: #b30000;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .prep-subtitle {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-siap {
+            background: linear-gradient(45deg, #b30000, #ff4d4d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(179, 0, 0, 0.4);
+        }
+
+        .btn-siap:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(179, 0, 0, 0.6);
+        }
+
+        .btn-belum {
+            background: rgba(200, 200, 200, 0.5);
+            color: #333;
+            border: 2px solid #999;
+        }
+
+        .btn-belum:hover {
+            background: rgba(180, 180, 180, 0.7);
+        }
+
+        /* ===== QUESTION SCREEN ===== */
+        .question-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 0 40px rgba(179, 0, 0, 0.25);
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            margin-bottom: 10px;
+        }
+
+        .question-number {
+            font-size: 0.95rem;
+            color: #b30000;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .question-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #b30000, #d4af37);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .answer-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-answer {
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .btn-iya {
+            background: linear-gradient(45deg, #28a745, #5cb85c);
+            color: white;
+            border-color: #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-iya:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn-Tidak {
+            background: linear-gradient(45deg, #dc3545, #ff6b6b);
+            color: white;
+            border-color: #dc3545;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-Tidak:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
+        }
+
+        /* ===== MESSAGE SCREEN ===== */
+        .message-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 0 0 40px rgba(220, 53, 69, 0.3);
+            text-align: center;
+            border: 3px solid #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .message-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .message-text {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        .message-subtext {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .btn-retry {
+            background: linear-gradient(45deg, #ffc107, #ffb300);
+            color: #333;
+            border: 2px solid #ffc107;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .btn-retry:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        /* ===== COMPLETION SCREEN ===== */
+        .completion-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 0 40px rgba(40, 167, 69, 0.3);
+            text-align: center;
+            border: 3px solid #28a745;
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .completion-title {
+            font-size: 2rem;
+            color: #28a745;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .completion-message {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .btn-next {
+            background: linear-gradient(45deg, #28a745, #5cb85c);
+            color: white;
+            padding: 15px 45px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            min-width: 200px;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+        }
+
+        .emoji {
+            display: inline-block;
+            margin: 0 5px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 600px) {
+            .prep-container, .question-container, .message-container, .completion-container {
+                padding: 30px 20px;
+            }
+
+            .prep-title {
+                font-size: 1.5rem;
+            }
+
+            .prep-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        .floating-hearts {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 2rem;
+            animation: floatUp 2s ease-out forwards;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SCREEN 1: PREPARATION -->
+        <div id="prep-screen" class="screen active">
+            <div class="prep-container">
+                <div class="prep-title">✨ Pertanyaan Spesial ✨</div>
+                <div class="prep-subtitle">
+                    Udah siap jawab pertanyaan?
+                    <br>
+                    <small style="font-size: 0.9rem; color: #b30000;">Semoga ko seneng cung kie gawe 3 hari 🤧</small>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-siap" id="btn-siap">Siap!</button>
+                    <button class="btn btn-belum" id="btn-belum">Belum Siap</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: QUESTIONS -->
+        <div id="question-screen" class="screen">
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number">Pertanyaan <span id="current-question">1</span> dari 5</div>
+                    <div class="question-progress">
+                        <div class="progress-bar" id="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div class="question-text" id="question-text"></div>
+                <div class="answer-buttons">
+                    <button class="btn btn-answer btn-iya" id="btn-iya">✓ Iya</button>
+                    <button class="btn btn-answer btn-Tidak" id="btn-Tidak">✗ Tidak</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: REJECTION MESSAGE -->
+        <div id="message-screen" class="screen">
+            <div class="message-container">
+                <div class="message-icon">😢</div>
+                <div class="message-text" id="message-text"></div>
+                <div class="message-subtext">Ayolah, coba jawab lagi dengan jujur...</div>
+                <button class="btn btn-answer btn-retry" id="btn-retry">Coba Lagi</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: COMPLETION -->
+        <div id="completion-screen" class="screen">
+            <div class="completion-container">
+                <div class="completion-icon">🎉</div>
+                <div class="completion-title">Tutug Cebol!</div>
+                <div class="completion-message">
+                    Semoga Ko Seneng Lah Cung Kie Gawe 3 Hari Full Demi Kamu.
+                    <br>
+                    Pasti Nesih Seneng Mantan Kandung Ya
+                </div>
+                <button class="btn btn-answer btn-next" id="btn-next">Lanjut ke Surprise 🎁</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "Aiman CEO Terkaya , IYA/TIDAK?",
+                rejectMessage: "Wkwkwkwk Dibilang Fakta Nya Iya... 😆"
+            },
+            {
+                text: "Kata Seseorang Kaila Pendek , IYA/TIDAK?",
+                rejectMessage: "Wkkwkwkwkwk Mampus Kau Pendek Dasar 😂"
+            },
+            {
+                text: "Kamu Sayang Ngga Sama Aiman?",
+                rejectMessage: "Parah Lu Pendek Sialan Cebol 🤬"
+            },
+            {
+                text: "Jujur, mantan kamu yang dulu itu sebenarnya lebih ganteng dariku, kan?",
+                rejectMessage: "Masa Sih Mantan U Kan Gangster Jalanan Semua Akunya Jadi Atut Di Tubruk"
+            },
+            {
+                text: "Kamu Masih Suka Sama Mantan Kamu?",
+                rejectMessage: "Ehem Masa Sih Udah Ngga Sayang Sama Mantan Kandung... 🫣"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // Elements
+        const prepScreen = document.getElementById('prep-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const messageScreen = document.getElementById('message-screen');
+        const completionScreen = document.getElementById('completion-screen');
+
+        const btnSiap = document.getElementById('btn-siap');
+        const btnBelum = document.getElementById('btn-belum');
+        const btnIya = document.getElementById('btn-iya');
+        const btnTidak = document.getElementById('btn-Tidak');
+        const btnRetry = document.getElementById('btn-retry');
+        const btnNext = document.getElementById('btn-next');
+
+        const questionText = document.getElementById('question-text');
+        const currentQuestionSpan = document.getElementById('current-question');
+        const progressBar = document.getElementById('progress-bar');
+        const messageText = document.getElementById('message-text');
+
+        // Event Listeners
+        btnSiap.addEventListener('click', startQuestions);
+        btnBelum.addEventListener('click', () => {
+            alert('Baik, semoga kamu siap lain waktu... 😊');
+            history.back();
+        });
+
+        btnIya.addEventListener('click', answerYes);
+        btnTidak.addEventListener('click', answerNo);
+        btnRetry.addEventListener('click', retryQuestion);
+        btnNext.addEventListener('click', goToNextPage);
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startQuestions() {
+            currentQuestionIndex = 0;
+            loadQuestion();
+            switchScreen('question-screen');
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.text;
+            currentQuestionSpan.textContent = currentQuestionIndex + 1;
+            progressBar.style.width = ((currentQuestionIndex + 1) / 5) * 100 + '%';
+        }
+
+        function answerYes() {
+            createHeartEffect();
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex >= questions.length) {
+                switchScreen('completion-screen');
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function answerNo() {
+            const question = questions[currentQuestionIndex];
+            messageText.textContent = question.rejectMessage;
+            switchScreen('message-screen');
+        }
+
+        function retryQuestion() {
+            switchScreen('question-screen');
+        }
+
+        function goToNextPage() {
+            // Simpan status ke localStorage
+            localStorage.setItem('questionsCompleted', 'true');
+            window.location.href = 'cake.html';
+        }
+
+        function createHeartEffect() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * window.innerWidth + 'px';
+                    heart.style.top = window.innerHeight + 'px';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // Load music state jika ada
+        window.addEventListener('load', () => {
+            try {
+                const savedMusicState = JSON.parse(localStorage.getItem('gmpMusicState'));
+                if (savedMusicState && savedMusicState.playing !== false) {
+                    // Musik akan dilanjutkan jika tersedia di halaman ini
+                }
+            } catch (e) {}
+        });
+    </script>
+</body>
+</html>
